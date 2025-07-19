@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>남해군 노인 복지 추천 서비스</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-blue-50 min-h-screen" id="main-body">
+    
+    <!-- 접근성 버튼들 -->
+    <div class="fixed top-4 right-4 z-50 flex gap-2">
+        <button id="voice-toggle-btn" class="btn-accessibility" title="음성 안내">
+            🔊
+        </button>
+        <button id="font-size-btn" class="btn-accessibility" title="글자 크기">
+            🔤
+        </button>
+        <button id="high-contrast-btn" class="btn-accessibility" title="고대비 모드">
+            🌓
+        </button>
+    </div>
+
+    <!-- 플로팅 음성 버튼 -->
+    <button id="floating-voice-btn" class="fixed bottom-4 right-4 z-50 bg-blue-600 text-white p-4 rounded-full shadow-lg hidden">
+        🔊
+    </button>
+
+    <!-- 로딩 오버레이 -->
+    <div id="loading-overlay" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p id="loading-text">처리 중입니다...</p>
+        </div>
+    </div>
+
+    <!-- 메인 컨테이너 -->
+    <div class="container mx-auto px-4 py-8">
+        
+        <!-- 헤더 -->
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-blue-800 mb-4">
+                🏝️ 남해군 노인 복지 추천 서비스
+            </h1>
+            <p class="text-xl text-gray-600 mb-2">
+                어르신을 위한 맞춤형 복지 혜택을 찾아드립니다
+            </p>
+            <p class="text-lg text-blue-600 font-semibold">
+                ✅ Node.js로 새롭게 태어난 안정적인 서비스
+            </p>
+        </header>
+
+        <!-- 메인 카드 -->
+        <div class="max-w-4xl mx-auto">
+            
+            <!-- 서비스 소개 -->
+            <div class="bg-white rounded-xl shadow-lg p-8 mb-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">
+                    🎯 맞춤형 복지 추천 시스템
+                </h2>
+                
+                <div class="grid md:grid-cols-3 gap-6 mb-8">
+                    <div class="text-center p-4 bg-blue-50 rounded-lg">
+                        <div class="text-3xl mb-2">📝</div>
+                        <h3 class="font-semibold text-blue-800 mb-2">간단한 설문</h3>
+                        <p class="text-sm text-gray-600">건강, 생활, 경제, 사회 4개 영역 설문</p>
+                    </div>
+                    <div class="text-center p-4 bg-green-50 rounded-lg">
+                        <div class="text-3xl mb-2">🤖</div>
+                        <h3 class="font-semibold text-green-800 mb-2">AI 분석</h3>
+                        <p class="text-sm text-gray-600">개인 맞춤형 복지 서비스 추천</p>
+                    </div>
+                    <div class="text-center p-4 bg-yellow-50 rounded-lg">
+                        <div class="text-3xl mb-2">💰</div>
+                        <h3 class="font-semibold text-yellow-800 mb-2">혜택 안내</h3>
+                        <p class="text-sm text-gray-600">신청 방법과 연락처 상세 제공</p>
+                    </div>
+                </div>
+
+                <!-- 주요 복지 혜택 미리보기 -->
+                <div class="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6 rounded-lg mb-8">
+                    <h3 class="text-xl font-bold mb-4 text-center">💎 주요 복지 혜택</h3>
+                    <div class="grid md:grid-cols-2 gap-4 text-sm">
+                        <div class="flex items-center">
+                            <span class="mr-2">💰</span>
+                            <span>기초연금: 월 최대 342,510원</span>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="mr-2">🏥</span>
+                            <span>의료비 지원: 연간 최대 120만원</span>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="mr-2">🤝</span>
+                            <span>맞춤돌봄: 월 40시간 무료</span>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="mr-2">💼</span>
+                            <span>노인일자리: 월 최대 594,000원</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 액션 버튼들 -->
+                <div class="flex flex-col md:flex-row gap-4 justify-center">
+                    <button id="start-survey-btn" class="btn-primary">
+                        📝 설문 시작하기
+                    </button>
+                    <button id="lookup-results-btn" class="btn-secondary">
+                        🔍 결과 조회하기
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- 사용자 정보 입력 모달 -->
+    <div id="user-info-modal" class="modal">
+        <div class="modal-content">
+            <h2 class="text-2xl font-bold text-center mb-6">👤 기본 정보 입력</h2>
+            <form id="user-info-form">
+                <div class="form-group">
+                    <label>성함</label>
+                    <input type="text" id="user-name" required placeholder="예: 홍길동">
+                </div>
+                <div class="form-group">
+                    <label>생년월일</label>
+                    <input type="date" id="birth-date" required>
+                </div>
+                <div class="form-group">
+                    <label>거주지역 (남해군)</label>
+                    <select id="district" required>
+                        <option value="">선택해주세요</option>
+                        <option value="남해읍">남해읍</option>
+                        <option value="이동면">이동면</option>
+                        <option value="상주면">상주면</option>
+                        <option value="삼동면">삼동면</option>
+                        <option value="미조면">미조면</option>
+                        <option value="남면">남면</option>
+                        <option value="서면">서면</option>
+                        <option value="고현면">고현면</option>
+                        <option value="설천면">설천면</option>
+                        <option value="창선면">창선면</option>
+                    </select>
+                </div>
+                <div class="flex gap-4 mt-6">
+                    <button type="button" id="cancel-btn" class="btn-secondary flex-1">
+                        취소
+                    </button>
+                    <button type="submit" class="btn-primary flex-1">
+                        다음
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 결과 조회 모달 -->
+    <div id="lookup-modal" class="modal">
+        <div class="modal-content">
+            <h2 class="text-2xl font-bold text-center mb-6">🔍 결과 조회</h2>
+            <form id="lookup-form">
+                <div class="form-group">
+                    <label>조회 키</label>
+                    <input type="text" id="lookup-key" required 
+                           placeholder="설문 완료 시 받은 조회 키를 입력하세요">
+                </div>
+                <div class="flex gap-4 mt-6">
+                    <button type="button" id="lookup-cancel-btn" class="btn-secondary flex-1">
+                        취소
+                    </button>
+                    <button type="submit" class="btn-primary flex-1">
+                        조회하기
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 설문조사 페이지 -->
+    <div id="survey-page" class="hidden">
+        <div class="container mx-auto px-4 py-8">
+            <div class="max-w-3xl mx-auto">
+                
+                <!-- 진행 표시기 -->
+                <div class="mb-8">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-sm font-medium text-blue-600">설문 진행률</span>
+                        <span id="progress-text" class="text-sm text-gray-600">1/4</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div id="progress-bar" class="bg-blue-600 h-2 rounded-full transition-all duration-300" style="width: 25%"></div>
+                    </div>
+                </div>
+
+                <!-- 설문 카드 -->
+                <div class="bg-white rounded-xl shadow-lg p-8">
+                    <h2 id="survey-title" class="text-2xl font-bold text-center mb-8">
+                        🏥 건강 상태
+                    </h2>
+                    
+                    <div id="survey-content">
+                        <!-- 설문 질문들이 여기에 동적으로 추가됩니다 -->
+                    </div>
+
+                    <div class="flex gap-4 mt-8">
+                        <button id="survey-prev-btn" class="btn-secondary flex-1 hidden">
+                            이전
+                        </button>
+                        <button id="survey-next-btn" class="btn-primary flex-1">
+                            다음
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 결과 페이지 -->
+    <div id="results-page" class="hidden">
+        <div class="container mx-auto px-4 py-8">
+            <div class="max-w-4xl mx-auto">
+                
+                <!-- 결과 헤더 -->
+                <div class="text-center mb-8">
+                    <h1 class="text-3xl font-bold text-blue-800 mb-4">
+                        🎉 맞춤 복지 추천 결과
+                    </h1>
+                    <div id="user-summary" class="text-lg text-gray-600">
+                        <!-- 사용자 요약 정보 -->
+                    </div>
+                </div>
+
+                <!-- 추천 결과 -->
+                <div id="recommendations-container">
+                    <!-- 추천 결과들이 여기에 동적으로 추가됩니다 -->
+                </div>
+
+                <!-- 액션 버튼들 -->
+                <div class="text-center mt-8">
+                    <button id="print-results-btn" class="btn-secondary mr-4">
+                        📄 결과 인쇄
+                    </button>
+                    <button id="new-survey-btn" class="btn-primary">
+                        🔄 새 설문하기
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html> 
